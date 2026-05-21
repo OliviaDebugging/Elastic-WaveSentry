@@ -1,4 +1,4 @@
-# 🛰️ Ambient Wi-Fi Packet Sniffer & Elastic Cloud Pipeline
+# 🛰️ Arduino Wi-Fi Packet Sniffer & Elastic Cloud Pipeline
 
 An end-to-end cyber-security data engineering project that intercepts ambient 802.11 Wi-Fi management frames using an ESP8266 microcontroller, pipes the raw hex payloads across a local USB serial bus, and streams them in real-time into an Elastic Cloud cluster for analysis via Kibana.
 
