@@ -14,7 +14,7 @@ An end-to-end cyber-security data engineering project that intercepts ambient 80
 
 ## 📁 Workspace Directory Hierarchy
 
-To keep your configuration organized and prevent Git from leaking secure credential files to public code repositories, maintain the following directory layout:
+This project follows the next structure:
 
 ```text
 ▼ ELASTIC SNIFFER (VS Code Workspace Root)
