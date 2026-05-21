@@ -1,4 +1,5 @@
 #include <ESP8266WiFi.h>
+#include <algorithm> // Adds the missing standard algorithm libraries
 
 extern "C" {
   #include "user_interface.h"
@@ -6,7 +7,6 @@ extern "C" {
 
 // This callback function triggers every single time a radio frame hits the antenna
 void sniffer_callback(uint8_t *buffer, uint16_t length) {
-  // We filter for packets larger than 12 bytes to bypass empty radiotap headers
   if (length > 12) {
     // 1. Send the structural prefix our Python script is hunting for
     Serial.print("PKT:");
@@ -14,8 +14,8 @@ void sniffer_callback(uint8_t *buffer, uint16_t length) {
     Serial.print(":");
     
     // 2. Stream the raw packet payload out as Hexadecimal characters
-    // We cap it at the first 50 bytes to keep the serial stream stable and lightweight
-    for (int i = 0; i < min((int)length, 50); i++) {
+    // Fixed: Using std::min explicitly to resolve compiler scope errors
+    for (int i = 0; i < std::min((int)length, 50); i++) {
       if (buffer[i] < 0x10) Serial.print("0"); // Pad single digits with a leading zero
       Serial.print(buffer[i], HEX);
     }
@@ -45,7 +45,6 @@ void setup() {
 }
 
 void loop() {
-  // The sniffer engine handles packet captures automatically using hardware 
-  // interrupts in the background, so we leave the main loop completely empty!
+  // Sniffing happens instantly in the background via hardware interrupts
   delay(10); 
 }
