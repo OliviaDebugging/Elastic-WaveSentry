@@ -1,4 +1,4 @@
-# 🛰️ Arduino Wi-Fi Packet Sniffer & Elastic Cloud Pipeline
+# 🛰️ Arduino Wi-Fi Packet Sniffer & Elastic Cloud SIEM Pipeline 
 
 An end-to-end cyber-security data engineering project that intercepts ambient 802.11 Wi-Fi management frames using an ESP8266 microcontroller, pipes the raw hex payloads across a local USB serial bus, and streams them in real-time into an Elastic Cloud cluster for analysis via Kibana.
 
@@ -17,8 +17,8 @@ An end-to-end cyber-security data engineering project that intercepts ambient 80
 This project follows the next structure:
 
 ```text
-▼ ELASTIC SNIFFER (VS Code Workspace Root)
-  ├── .gitignore               # Root Git exclusion file (protects credentials)
+▼ ARDUINO WI-FI SNIFFER 
+  ├── .gitignore               # Root Git exclusion file 
   ├── .venv/                   # Python Local Virtual Environment
   ├── arduino_firmware/
   │   └── arduino_firmware.ino # Arduino Promiscuous Sniffer Firmware C++ Code
