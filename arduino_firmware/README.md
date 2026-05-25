@@ -16,15 +16,12 @@ A lightweight, high-performance Wi-Fi promiscuous mode sniffer designed for the 
 * **Structured Serial Output**: Pre-formats packets with a `PKT:[length]:[payload]` prefix for trivial parsing on the host device.
 * **Hex-Padded Output**: Automatically pads single-digit hex values to ensure a clean, predictable byte stream.
 
-<br>
 
 ## Hardware Requirements
 
 * **Microcontroller**: Any ESP8266-based development board (NodeMCU, Wemos D1 Mini, ESP-01, etc.).
 * **Data Cable**: Micro-USB (or USB-C depending on your board) capable of data transfer.
 
-
-<br>
 
 ## ⚙️ How It Works
 
@@ -33,7 +30,6 @@ A lightweight, high-performance Wi-Fi promiscuous mode sniffer designed for the 
 3.  **Promiscuous Injection**: The SDK's promiscuous engine is enabled, injecting a custom callback function (`sniffer_callback`) into the RX radio stack.
 4.  **Serial Streaming**: For every intercepted frame, the script prints the first 50 bytes of the payload in hexadecimal format directly to the Serial interface at **115200 baud**.
 
-<br>
 
 ## Installation & Setup:
 1. Open the Arduino IDE.
@@ -44,7 +40,6 @@ A lightweight, high-performance Wi-Fi promiscuous mode sniffer designed for the 
 6. Upload the sketch, using the "Upload" button in the Arduino IDE.
 7. Open the Serial Monitor to start viewing captured Wi-Fi packets in real-time.
 
-<br>
 
 ## Configuration Changes:
 If you want to monitor a different Wi-Fi channel, locate the following line in void setup() and change the integer (1-13 depending on your region):
@@ -52,22 +47,23 @@ If you want to monitor a different Wi-Fi channel, locate the following line in v
 ```C++
 // Change 6 to your desired target channel (e.g., 1 or 11)
 wifi_set_channel(6); 
-```
-
-<br>
+``` 
 
 ## Important Considerations
 ***No Wi-Fi Connectivity:*** While this script is running, the ESP8266 cannot connect to a Wi-Fi network or host an Access Point because the radio chipset is completely dedicated to listening.
 
 ***2.4 GHz Limitation:*** The ESP8266 hardware only supports 2.4 GHz frequencies (802.11 b/g/n). It cannot sniff 5 GHz or 6 GHz bands.
 
-<br>
-
 ## 📊 Data Output Format
 
 The serial output is structured to be easily parsed by regular expressions or string splitting in a host script (e.g., Python):
 
 `PKT:<packet_length>:<hex_payload>`
+
+Where:
+- `<packet_length>` is the total length of the captured packet in bytes.
+- `<hex_payload>` is the raw packet data represented as a continuous hexadecimal string (with leading zeros padded for single-digit values).
+
 
 ### Example Output:
 ```text
@@ -77,7 +73,7 @@ PKT:64:4000000000259c218bb0ffffffffffffa0c1
 ````
 
 📌 Note: To prevent serial buffer congestion, the script is currently capped to stream up to the first 50 bytes of each packet payload. You can adjust this limit in the std::min((int)length, 50) line inside the sketch.
-<br>
+
 
 ## 🔍 Elastic SIEM Integration & Real-Time Parsing
 
