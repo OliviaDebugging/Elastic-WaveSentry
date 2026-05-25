@@ -17,7 +17,7 @@ if not ELASTIC_CLOUD_ID or not ELASTIC_API_KEY:
     sys.exit(1)
 
 es = Elasticsearch(
-    cloud_id=ELASTIC_CLOUD_ID, # Fixed: matched with your variable name
+    cloud_id=ELASTIC_CLOUD_ID, 
     api_key=ELASTIC_API_KEY  
 )
 
