@@ -33,6 +33,24 @@ A lightweight, high-performance Wi-Fi promiscuous mode sniffer designed for the 
 
 <br>
 
+
+## Configuration Changes:
+If you want to monitor a different Wi-Fi channel, locate the following line in void setup() and change the integer (1-13 depending on your region):
+
+```C++
+// Change 6 to your desired target channel (e.g., 1 or 11)
+wifi_set_channel(6); 
+```
+
+<br>
+
+## Important Considerations
+***No Wi-Fi Connectivity:*** While this script is running, the ESP8266 cannot connect to a Wi-Fi network or host an Access Point because the radio chipset is completely dedicated to listening.
+
+***2.4 GHz Limitation:*** The ESP8266 hardware only supports 2.4 GHz frequencies (802.11 b/g/n). It cannot sniff 5 GHz or 6 GHz bands.
+
+<br>
+
 ## 📊 Data Output Format
 
 The serial output is structured to be easily parsed by regular expressions or string splitting in a host script (e.g., Python):
@@ -137,19 +155,3 @@ else {
 6. Upload the sketch, using the "Upload" button in the Arduino IDE.
 7. Open the Serial Monitor to start viewing captured Wi-Fi packets in real-time.
 
-<br>
-
-## Configuration Changes:
-If you want to monitor a different Wi-Fi channel, locate the following line in void setup() and change the integer (1-13 depending on your region):
-
-```C++
-// Change 6 to your desired target channel (e.g., 1 or 11)
-wifi_set_channel(6); 
-```
-
-<br>
-
-## Important Considerations
-***No Wi-Fi Connectivity:*** While this script is running, the ESP8266 cannot connect to a Wi-Fi network or host an Access Point because the radio chipset is completely dedicated to listening.
-
-***2.4 GHz Limitation:*** The ESP8266 hardware only supports 2.4 GHz frequencies (802.11 b/g/n). It cannot sniff 5 GHz or 6 GHz bands.
