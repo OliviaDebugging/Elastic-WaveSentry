@@ -52,8 +52,7 @@ wifi_set_channel(6);
 
 **Legal & Ethical Use:*** Always ensure you have explicit permission to capture Wi-Fi traffic in your environment. Unauthorized interception of wireless communications may violate local laws and regulations.
 
-
----
+--- 
 <br>
 
 ## 📊 Data Output Format
