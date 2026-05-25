@@ -68,7 +68,7 @@ The first 50 bytes streamed by the firmware expose the structural backbone of th
 
 ---
 
-### 🛠️ Runtime Field Implementations (Painless)
+### 🛠️ Runtime Field Implementations (Painless Script)
 
 To analyze this data in Kibana, navigate to **Stack Management** -> **Data Views** -> Select your index -> **Runtime Fields**, and add the following metrics:
 
@@ -96,6 +96,7 @@ if (doc['raw_message.keyword'].size() > 0) {
     }
   }
 }
+```
 
 <br>
 
