@@ -99,7 +99,7 @@ Where:
 - `sensor.interface`: A static label indicating the method of data collection (e.g., "ambient_wifi").       
 
 ## 🛠️ Troubleshooting Tips
-**Error: Missing Credentials:** Verify that the .env file name starts with a dot (.) and resides in the exact same directory where you are running the python script.
+**Error: Missing Credentials:** Verify that the ```.env``` file name starts with a dot (.) and resides in the exact same directory where you are running the python script.
 
 **Serial Exception (Port Busy):** Ensure that you do not have the Arduino IDE Serial Monitor open at the same time, as only one application can communicate with the USB interface at once.
 
