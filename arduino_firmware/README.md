@@ -33,6 +33,16 @@ A lightweight, high-performance Wi-Fi promiscuous mode sniffer designed for the 
 
 <br>
 
+## Installation & Setup:
+1. Open the Arduino IDE.
+2. Ensure you have the ESP8266 Board Package installed (via Tools > Board > Boards Manager...).
+3. Copy the script into a new sketch.
+4. Select your specific ESP8266 board and correct COM port from the Tools menu.
+5. Set the Serial Monitor baud rate to 115200.
+6. Upload the sketch, using the "Upload" button in the Arduino IDE.
+7. Open the Serial Monitor to start viewing captured Wi-Fi packets in real-time.
+
+<br>
 
 ## Configuration Changes:
 If you want to monitor a different Wi-Fi channel, locate the following line in void setup() and change the integer (1-13 depending on your region):
@@ -144,14 +154,5 @@ else {
 }
 ```
 
-<br>
 
-## Installation & Setup:
-1. Open the Arduino IDE.
-2. Ensure you have the ESP8266 Board Package installed (via Tools > Board > Boards Manager...).
-3. Copy the script into a new sketch.
-4. Select your specific ESP8266 board and correct COM port from the Tools menu.
-5. Set the Serial Monitor baud rate to 115200.
-6. Upload the sketch, using the "Upload" button in the Arduino IDE.
-7. Open the Serial Monitor to start viewing captured Wi-Fi packets in real-time.
 
