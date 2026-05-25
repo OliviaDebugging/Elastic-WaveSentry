@@ -4,3 +4,9 @@
 *.log
 *.bin
 *.elf
+
+# OS generated files
+.DS_Store
+
+# VS Code workspace configurations
+*.code-workspace
