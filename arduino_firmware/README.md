@@ -74,7 +74,7 @@ Because different 802.11 frame types (e.g., heavy Management Beacons vs. short C
 
 To overcome this, the Elastic Data View uses an adaptive runtime field script that evaluates the payload length dynamically. It also intercepts modern mobile security protocols by identifying **Locally Administered Addresses (LAA)** used for MAC randomization.
 
-### 🛠️ Production Painless Script (`wifi.vendor_advanced`)
+### 🛠️ Production Painless Script (`packet.oui`)
 * **Type:** `keyword`
 * **Target Field Parsed:** `packet.payload_hex.keyword`
 
