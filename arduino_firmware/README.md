@@ -52,9 +52,6 @@ wifi_set_channel(6);
 
 **Legal & Ethical Use:*** Always ensure you have explicit permission to capture Wi-Fi traffic in your environment. Unauthorized interception of wireless communications may violate local laws and regulations.
 
---- 
-<br>
-
 ## 📊 Data Output Format
 
 The serial output is structured to be easily parsed by regular expressions or string splitting in a host script (e.g., Python):
@@ -74,7 +71,8 @@ PKT:64:4000000000259c218bb0ffffffffffffa0c1
 ````
 
 📌 Note: To prevent serial buffer congestion, the script is currently capped to stream up to the first 50 bytes of each packet payload. You can adjust this limit in the std::min((int)length, 50) line inside the sketch.
-
+ 
+<br>
 
 ## Elastic SIEM Integration & Real-Time Parsing
 
