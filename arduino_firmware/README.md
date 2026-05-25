@@ -3,11 +3,7 @@
 A lightweight, high-performance Wi-Fi promiscuous mode sniffer designed for the ESP8266 microcontroller. This script configures the hardware radio to intercept raw 802.11 frames on a specified channel and streams them over a serial connection using a structured hexadecimal format, making it ideal for integration with Python scripts or other host-side data parsers.
 
 **Note: This firmware is intended for educational and research purposes only. Ensure you have proper authorization to capture Wi-Fi traffic in your environment.**
-
-
----
 <br>
-
 
 ## Features
 
@@ -31,7 +27,7 @@ A lightweight, high-performance Wi-Fi promiscuous mode sniffer designed for the 
 4.  **Serial Streaming**: For every intercepted frame, the script prints the first 50 bytes of the payload in hexadecimal format directly to the Serial interface at **115200 baud**.
 
 
-## Installation & Setup:
+## Installation & Setup
 1. Open the Arduino IDE.
 2. Ensure you have the ESP8266 Board Package installed (via Tools > Board > Boards Manager...).
 3. Copy the script into a new sketch.
@@ -41,7 +37,7 @@ A lightweight, high-performance Wi-Fi promiscuous mode sniffer designed for the 
 7. Open the Serial Monitor to start viewing captured Wi-Fi packets in real-time.
 
 
-## Configuration Changes:
+### Configuration Changes:
 If you want to monitor a different Wi-Fi channel, locate the following line in void setup() and change the integer (1-13 depending on your region):
 
 ```C++
@@ -53,6 +49,12 @@ wifi_set_channel(6);
 ***No Wi-Fi Connectivity:*** While this script is running, the ESP8266 cannot connect to a Wi-Fi network or host an Access Point because the radio chipset is completely dedicated to listening.
 
 ***2.4 GHz Limitation:*** The ESP8266 hardware only supports 2.4 GHz frequencies (802.11 b/g/n). It cannot sniff 5 GHz or 6 GHz bands.
+
+**Legal & Ethical Use:*** Always ensure you have explicit permission to capture Wi-Fi traffic in your environment. Unauthorized interception of wireless communications may violate local laws and regulations.
+
+<br>
+
+---
 
 ## 📊 Data Output Format
 
@@ -75,7 +77,7 @@ PKT:64:4000000000259c218bb0ffffffffffffa0c1
 📌 Note: To prevent serial buffer congestion, the script is currently capped to stream up to the first 50 bytes of each packet payload. You can adjust this limit in the std::min((int)length, 50) line inside the sketch.
 
 
-## 🔍 Elastic SIEM Integration & Real-Time Parsing
+## Elastic SIEM Integration & Real-Time Parsing
 
 The hex payload streamed from the ESP8266 contains standard **IEEE 802.11 MAC Layer Headers**. When you forward this data from your Python bridge into Elasticsearch (into a field named `raw_message`), you can parse it dynamically at query-time using **Runtime Fields** (Painless scripting) without re-indexing your data.
 
@@ -151,6 +153,14 @@ else {
     emit("No Payload Data");
 }
 ```
+### 🛠️ Testing the Runtime Field
+To validate the accuracy of this parsing logic, you can use the **Runtime Field Tester** in Kibana's Data Views section. Input sample hex strings that mimic real packet captures to see how the script classifies them:    
+| Sample Hex Payload (First 50 Bytes) | Expected Output |
+| :--- | :--- |
+| `4000000000259c218bb0ffffffffffffa0c1` | "Apple Core Device" (matches OUI `d2babd`) |
+| `80000000ffffffffffff00259c218bb000259c218bb0a 1` | "TP-Link Router Node" (matches OUI `c02567`) |
+| `4000000000259c218bb0ffffffffffffa0c1` | "Randomized Privacy Address" (matches LAA pattern) | 
+
 
 
 
