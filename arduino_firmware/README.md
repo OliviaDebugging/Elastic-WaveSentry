@@ -91,7 +91,8 @@ The first 50 bytes streamed by the firmware expose the structural backbone of th
 
 > 💡 **Byte to Hex Conversion Note:** Because 1 byte equals 2 hexadecimal characters, Byte 10 starts exactly at character index **20** of the raw payload string (ignoring the `PKT:[len]:` prefix).
 
----
+
+<hr>
 
 ### 🛠️ Elastic Runtime Field Implementations (Painless Script): Advanced Multi-Pattern Vendor & Privacy Detection
 
