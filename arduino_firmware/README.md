@@ -47,6 +47,55 @@ PKT:64:4000000000259c218bb0ffffffffffffa0c1
 ````
 
 📌 Note: To prevent serial buffer congestion, the script is currently capped to stream up to the first 50 bytes of each packet payload. You can adjust this limit in the std::min((int)length, 50) line inside the sketch.
+<br>
+
+## 🔍 Elastic SIEM Integration & Real-Time Parsing
+
+The hex payload streamed from the ESP8266 contains standard **IEEE 802.11 MAC Layer Headers**. When you forward this data from your Python bridge into Elasticsearch (into a field named `raw_message`), you can parse it dynamically at query-time using **Runtime Fields** (Painless scripting) without re-indexing your data.
+
+### 802.11 Header Structure Map
+The first 50 bytes streamed by the firmware expose the structural backbone of the intercepted packet:
+
+| Byte Offset | Size | Purpose | Description |
+| :--- | :--- | :--- | :--- |
+| **Bytes 0–1** | 2 Bytes | Frame Control | Dictates the type of packet (e.g., `4000` = Probe Request, `8000` = Beacon). |
+| **Bytes 2–3** | 2 Bytes | Duration/ID | Channel allocation time window. |
+| **Bytes 4–9** | 6 Bytes | **Address 1 (Receiver)** | The target MAC address receiving this over-the-air packet. |
+| **Bytes 10–15**| 6 Bytes | **Address 2 (Transmitter)**| The MAC address of the device broadcasting (**Your Target Device**). |
+| **Bytes 16–21**| 6 Bytes | **Address 3 (Filtering)** | Source or BSSID (Access Point MAC) depending on frame type. |
+
+> 💡 **Byte to Hex Conversion Note:** Because 1 byte equals 2 hexadecimal characters, Byte 10 starts exactly at character index **20** of the raw payload string (ignoring the `PKT:[len]:` prefix).
+
+---
+
+### 🛠️ Runtime Field Implementations (Painless)
+
+To analyze this data in Kibana, navigate to **Stack Management** -> **Data Views** -> Select your index -> **Runtime Fields**, and add the following metrics:
+
+#### 1. Extracting the Frame Type (`wifi.frame_type`)
+Identify exactly what the target device is doing on the airwaves.
+* **Type:** `keyword`
+
+```painless
+if (doc['raw_message.keyword'].size() > 0) {
+  String msg = doc['raw_message.keyword'].value;
+  if (msg.startsWith("PKT:")) {
+    String[] parts = msg.splitOnToken(':');
+    if (parts.length >= 3 && parts[2].length() >= 4) {
+      String frameControl = parts[2].substring(0, 4);
+      
+      if (frameControl.equals("4000")) {
+        emit("Probe Request (Device Searching for Wi-Fi)");
+      } else if (frameControl.equals("8000")) {
+        emit("Beacon Frame (Router Broadcasting SSID)");
+      } else if (frameControl.equals("a000")) {
+        emit("Disassociation (Device Disconnecting)");
+      } else {
+        emit("Other Data/Control Frame (" + frameControl + ")");
+      }
+    }
+  }
+}
 
 <br>
 
