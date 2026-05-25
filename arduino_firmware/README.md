@@ -26,8 +26,8 @@ A lightweight, high-performance Wi-Fi promiscuous mode sniffer designed for the 
 ## ⚙️ How It Works
 
 1.  **Radio Disconnection**: The script disconnects the ESP8266 from any active Wi-Fi networks and sets the operating mode to `STATION_MODE` to unlock the radio.
-2.  **Channel Locking**: The radio is statically locked onto **Channel 6** (2.4 GHz).
-3.  **Promiscuous Injection**: The SDK's promiscuous engine is enabled, injecting a custom callback function (`sniffer_callback`) into the RX radio stack.
+2.  **Promiscuous Injection**: The SDK's promiscuous engine is enabled, injecting a custom callback function (`sniffer_callback`) into the RX radio stack.
+3.  **Channel Locking**: The radio is statically locked onto **Channel 6** (2.4 GHz).
 4.  **Serial Streaming**: For every intercepted frame, the script prints the first 50 bytes of the payload in hexadecimal format directly to the Serial interface at **115200 baud**.
 
 
