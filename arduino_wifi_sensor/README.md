@@ -26,7 +26,7 @@ Before executing the script, ensure you have the following ready:
 
 
 ## 🚀 Installation & Setup
-**1. Clone or Download the Project:** Ensure the Python script (e.g., sniffer_bridge.py) is located in your desired working directory.
+**1. Clone or Download the Project:** Ensure the Python script (e.g.,       ```sniffer_bridge.py```) is located in your desired working directory.
 
 **2. Install Dependencies:** Install the required external libraries using pip:
 
@@ -34,12 +34,12 @@ Before executing the script, ensure you have the following ready:
 pip install pyserial python-dotenv elasticsearch
 ```
 
-**3. Configure the Environment Variables:** Create a file named .env in the exact same directory as your Python script. Populate it with your connection details:
+**3. Configure the Environment Variables:** Create a file named ```.env``` in the exact same directory as your Python script. Populate it with your connection details:
 
 ```env
 # Elastic Cloud Configuration
 ELASTIC_CLOUD_ID="your-deployment-name:dXMtY2VudHJhbDEuZ2N...=="
-ELASTIC_API_KEY="VjF...your_api_key_here...=="
+ELASTIC_API_KEY="your_api_key_here=="
 
 # Serial/USB Hardware Configuration
 # Windows Example: COM3, COM4
