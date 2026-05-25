@@ -1,4 +1,4 @@
-# ESP8266 Raw Wi-Fi Packet Sniffer
+# ESP8266 Arduino Raw Wi-Fi Packet Sniffer
 
 A lightweight, high-performance Wi-Fi promiscuous mode sniffer designed for the ESP8266 microcontroller. This script configures the hardware radio to intercept raw 802.11 frames on a specified channel and streams them over a serial connection using a structured hexadecimal format, making it ideal for integration with Python scripts or other host-side data parsers.
 
