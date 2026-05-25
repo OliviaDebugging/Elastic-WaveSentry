@@ -17,6 +17,7 @@ A lightweight, high-performance Wi-Fi promiscuous mode sniffer designed for the 
 
 * **Microcontroller**: Any ESP8266-based development board (NodeMCU, Wemos D1 Mini, ESP-01, etc.).
 * **Data Cable**: Micro-USB (or USB-C depending on your board) capable of data transfer.
+* **Power Source**: USB power from your computer or a compatible power adapter.
 
 
 ## ⚙️ How It Works
@@ -50,7 +51,7 @@ wifi_set_channel(6);
 
 ***2.4 GHz Limitation:*** The ESP8266 hardware only supports 2.4 GHz frequencies (802.11 b/g/n). It cannot sniff 5 GHz or 6 GHz bands.
 
-**Legal & Ethical Use:*** Always ensure you have explicit permission to capture Wi-Fi traffic in your environment. Unauthorized interception of wireless communications may violate local laws and regulations.
+**Legal & Ethical Use:** Always ensure you have explicit permission to capture Wi-Fi traffic in your environment. Unauthorized interception of wireless communications may violate local laws and regulations.
 
 ## 📊 Data Output Format
 
@@ -68,7 +69,7 @@ Where:
 🛰️ Hardware Sniffer Initialized.
 PKT:128:80000000ffffffffffff00259c218bb000259c218bb0a0c1
 PKT:64:4000000000259c218bb0ffffffffffffa0c1
-````
+```
 
 📌 Note: To prevent serial buffer congestion, the script is currently capped to stream up to the first 50 bytes of each packet payload. You can adjust this limit in the std::min((int)length, 50) line inside the sketch.
  
@@ -91,8 +92,8 @@ The first 50 bytes streamed by the firmware expose the structural backbone of th
 
 > 💡 **Byte to Hex Conversion Note:** Because 1 byte equals 2 hexadecimal characters, Byte 10 starts exactly at character index **20** of the raw payload string (ignoring the `PKT:[len]:` prefix).
 
-
 <hr>
+
 
 ### 🛠️ Elastic Runtime Field Implementations (Painless Script): Advanced Multi-Pattern Vendor & Privacy Detection
 
@@ -100,7 +101,7 @@ Because different 802.11 frame types (e.g., heavy Management Beacons vs. short C
 
 To overcome this, the Elastic Data View uses an adaptive runtime field script that evaluates the payload length dynamically. It also intercepts modern mobile security protocols by identifying **Locally Administered Addresses (LAA)** used for MAC randomization.
 
-### 🛠️ Production Painless Script (`packet.oui`)
+### Production Painless Script (`packet.oui`)
 * **Type:** `keyword`
 * **Target Field Parsed:** `packet.payload_hex.keyword`
 
@@ -109,26 +110,25 @@ if (doc.containsKey('packet.payload_hex.keyword') && !doc['packet.payload_hex.ke
     String hex = doc['packet.payload_hex.keyword'].value;
     String oui = "";
     
-    // Pattern A: Long Management, Beacon, and Data Frames
+    // Pattern A: Long Management, Beacon, and Data Frames (Standard 24-byte MAC headers)
     if (hex.length() >= 50) {
         oui = hex.substring(44, 50).toLowerCase();
     } 
-    // Pattern B: Short Control and Link Synchronization Frames
+    // Pattern B: Short Control and Link Synchronization Frames (Stripped control headers)
     else if (hex.length() >= 38 && hex.length() < 50) {
         oui = hex.substring(32, 38).toLowerCase();
     }
 
     if (!oui.equals("")) {
-        // --- Core Infrastructure & Networking Devices ---
-        if (oui.equals("c02567")) { emit("TP-Link Router Node"); }
-        else if (oui.equals("ccbabd") || oui.equals("d2babd") || oui.equals("d6babd")) { emit("Apple Core Device"); }
-        else if (oui.equals("d4abcd")) { emit("LG Electronics Smart Appliance"); }
-        else if (oui.equals("4cebd6")) { emit("Cisco / Linksys Hardware"); }
-        else if (oui.equals("a4438c")) { emit("Intel Centrino"); }
+        // --- Enterprise Networking & Core Infrastructure ---
+        if (oui.equals("00259c") || oui.equals("001ee5")) { emit("Cisco Systems"); }
+        else if (oui.equals("24a074") || oui.equals("30aea4")) { emit("Espressif Inc."); }
+        else if (oui.equals("001422") || oui.equals("a4438c")) { emit("Intel Corporation"); }
         
-        // --- Smart Home & Connected IoT Footprints ---
-        else if (oui.equals("34d270") || oui.equals("fc65de") || oui.equals("50dc4a")) { emit("Amazon Echo Dot (Alexa)"); }
-        else if (oui.equals("d8004d") || oui.equals("0026e2") || oui.equals("e0b52d")) { emit("TCL Smart TV"); }
+        // --- Consumer Electronics & Mobile Device Signatures ---
+        else if (oui.equals("001c43") || oui.equals("3c286d")) { emit("Apple Inc."); }
+        else if (oui.equals("f4f5d8") || oui.equals("bcd074")) { emit("Google LLC"); }
+        else if (oui.equals("0000f0") || oui.equals("f87b8c")) { emit("Samsung Electronics"); }
         
         // --- Cyber Security Layer: Catch Randomized Privacy Profiles ---
         // Inspects the locally administered bit (b1 of the first byte). 
@@ -145,20 +145,17 @@ if (doc.containsKey('packet.payload_hex.keyword') && !doc['packet.payload_hex.ke
     } else {
         emit("Malformed / Short Packet");
     }
-}
-
-else {
+} else {
     emit("No Payload Data");
 }
 ```
-### 🛠️ Testing the Runtime Field
-To validate the accuracy of this parsing logic, you can use the **Runtime Field Tester** in Kibana's Data Views section. Input sample hex strings that mimic real packet captures to see how the script classifies them:    
-| Sample Hex Payload (First 50 Bytes) | Expected Output |
-| :--- | :--- |
-| `4000000000259c218bb0ffffffffffffa0c1` | "Apple Core Device" (matches OUI `d2babd`) |
-| `80000000ffffffffffff00259c218bb000259c218bb0a 1` | "TP-Link Router Node" (matches OUI `c02567`) |
-| `4000000000259c218bb0ffffffffffffa0c1` | "Randomized Privacy Address" (matches LAA pattern) | 
+### Explanation of the Painless Script Logic:
+1. **Dynamic Length Evaluation**: The script first checks the length of the `packet.payload_hex.keyword` field to determine which parsing pattern to apply:
+   - **Pattern A**: For packets with a hex string length of 50 or more characters, it assumes a standard 24-byte MAC header and extracts the OUI from bytes 16–21 (characters 44–49).
+   - **Pattern B**: For shorter packets (38–49 characters), it assumes a stripped control frame and extracts the OUI from bytes 10–15 (characters 32–37).   
+2. **Vendor Mapping**: The script contains a mapping of known OUIs to major manufacturers, allowing for immediate identification of devices from brands like Apple, Google, Samsung, Cisco, Intel, and Espressif.
+3. **Privacy Detection**: By inspecting the locally administered bit in the OUI, the script can identify randomized MAC addresses, which are commonly used by modern mobile devices to enhance privacy.
+4. **Fallback Handling**: If the OUI does not match any known patterns, it emits a generic "Other Identity" label along with the extracted OUI for manual analysis. It also handles cases where the packet is too short or malformed, ensuring that all documents receive a meaningful classification.  
 
-
-
-
+## Conclusion
+This ESP8266 firmware, combined with Elastic SIEM's powerful runtime field capabilities, provides a robust and flexible solution for real-time Wi-Fi packet analysis. By leveraging dynamic parsing logic and comprehensive vendor mapping, security analysts can gain immediate insights into the devices present in their wireless environment, while also identifying potential privacy threats from randomized MAC addresses.
