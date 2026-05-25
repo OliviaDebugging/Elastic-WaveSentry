@@ -2,6 +2,10 @@
 
 A lightweight, high-performance Wi-Fi promiscuous mode sniffer designed for the ESP8266 microcontroller. This script configures the hardware radio to intercept raw 802.11 frames on a specified channel and streams them over a serial connection using a structured hexadecimal format, making it ideal for integration with Python scripts or other host-side data parsers.
 
+**Note: This firmware is intended for educational and research purposes only. Ensure you have proper authorization to capture Wi-Fi traffic in your environment.**
+
+
+---
 
 ## Features
 
@@ -10,6 +14,7 @@ A lightweight, high-performance Wi-Fi promiscuous mode sniffer designed for the 
 * **Structured Serial Output**: Pre-formats packets with a `PKT:[length]:[payload]` prefix for trivial parsing on the host device.
 * **Hex-Padded Output**: Automatically pads single-digit hex values to ensure a clean, predictable byte stream.
 
+<br>
 
 ## Hardware Requirements
 
@@ -17,6 +22,7 @@ A lightweight, high-performance Wi-Fi promiscuous mode sniffer designed for the 
 * **Data Cable**: Micro-USB (or USB-C depending on your board) capable of data transfer.
 
 
+<br>
 
 ## ⚙️ How It Works
 
@@ -25,6 +31,7 @@ A lightweight, high-performance Wi-Fi promiscuous mode sniffer designed for the 
 3.  **Promiscuous Injection**: The SDK's promiscuous engine is enabled, injecting a custom callback function (`sniffer_callback`) into the RX radio stack.
 4.  **Serial Streaming**: For every intercepted frame, the script prints the first 50 bytes of the payload in hexadecimal format directly to the Serial interface at **115200 baud**.
 
+<br>
 
 ## 📊 Data Output Format
 
@@ -41,7 +48,7 @@ PKT:64:4000000000259c218bb0ffffffffffffa0c1
 
 📌 Note: To prevent serial buffer congestion, the script is currently capped to stream up to the first 50 bytes of each packet payload. You can adjust this limit in the std::min((int)length, 50) line inside the sketch.
 
-
+<br>
 
 ## Installation & Setup:
 1. Open the Arduino IDE.
@@ -52,7 +59,7 @@ PKT:64:4000000000259c218bb0ffffffffffffa0c1
 6. Upload the sketch, using the "Upload" button in the Arduino IDE.
 7. Open the Serial Monitor to start viewing captured Wi-Fi packets in real-time.
 
-
+<br>
 
 ## Configuration Changes:
 If you want to monitor a different Wi-Fi channel, locate the following line in void setup() and change the integer (1-13 depending on your region):
@@ -62,6 +69,7 @@ If you want to monitor a different Wi-Fi channel, locate the following line in v
 wifi_set_channel(6); 
 ```
 
+<br>
 
 ## Important Considerations
 ***No Wi-Fi Connectivity:*** While this script is running, the ESP8266 cannot connect to a Wi-Fi network or host an Access Point because the radio chipset is completely dedicated to listening.
