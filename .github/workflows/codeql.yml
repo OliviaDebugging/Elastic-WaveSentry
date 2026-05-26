@@ -31,6 +31,16 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    # CodeQL buildless mode ignores .ino files. 
+    # This step temporarily duplicates .ino files as .cpp files so CodeQL can scan them.
+    - name: Prepare Arduino files for CodeQL
+      if: matrix.language == 'c-cpp'
+      run: |
+        find . -type f -name "*.ino" | while read -r file; do
+          cp "$file" "${file%.ino}.cpp"
+          echo "Prepared: ${file%.ino}.cpp"
+        done
+
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
       with:
